@@ -1,14 +1,21 @@
 package IntroToArrayLists;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Stack;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,10 +25,12 @@ public class Hangman implements KeyListener {
 	JFrame frame;
 	JPanel panel;
 	JLabel label;
+	JLabel livesdisplay;
 	Stack<String> hardWord;
 	Stack<String> easyWord;
 	ArrayList<JLabel> boxes;
 	int n;
+	int lives;
 	String wordPicked;
 	String letterCount;
 	String lettersUp;
@@ -32,10 +41,13 @@ public class Hangman implements KeyListener {
 		frame = new JFrame();
 		panel = new JPanel();
 		label = new JLabel();
+		livesdisplay = new JLabel();
 		letterCount = "";
 		hardWord = new Stack<String>();
 		easyWord = new Stack<String>();
 		Object[] options = { "Easy Mode", "Hard Mode" };
+		lives = 9;
+		livesdisplay.setText(" "+lives);
 		n = JOptionPane.showOptionDialog(frame, "Pick your level.", "Hangman", JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
@@ -49,7 +61,11 @@ public class Hangman implements KeyListener {
 			panel.add(label);
 			boxes.add(label);
 		}
+		panel.add(livesdisplay);
+		livesdisplay.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+		frame.pack();
 		label.setText(letterCount);
+		
 	}
 	
 	void reset() {
@@ -67,6 +83,7 @@ public class Hangman implements KeyListener {
 		frame.addKeyListener(this);
 		panel.add(label);
 		lineMaker();
+
 
 		frame.pack();
 	}
@@ -114,7 +131,6 @@ public class Hangman implements KeyListener {
 		} else if (n == 1) {
 			wordPicked = hardWord.pop();
 		}
-		System.out.println(wordPicked);
 
 	}
 
@@ -129,11 +145,14 @@ public class Hangman implements KeyListener {
 	private void loadNextPuzzle() {
 		reset();
 		if(n==0) {
-			wordPicked = easyWord.pop();
+			Random r=new Random();
+			int word = r.nextInt(easyWord.size());
+			wordPicked = easyWord.get(word);
 		}else if(n==1) {
-			wordPicked = hardWord.pop();
+			Random r=new Random();
+			int word = r.nextInt(hardWord.size());
+			wordPicked = hardWord.get(word);
 		}
-		System.out.println("the word is now " + wordPicked);
 		lineMaker();
 	}
 	
@@ -165,18 +184,37 @@ public class Hangman implements KeyListener {
 		if(wordPicked.indexOf(keypressed) >= 0){
 			//System.out.println("yay");
 			updateSpacesWithUserInput(keypressed);
+		}else {
+			lives --;
+			livesdisplay.setText(" "+lives);
 		}
 		lettersUp = getCurrentAnswer();
 		if(lettersUp.equals(wordPicked)) {
 			JOptionPane.showMessageDialog(null, "Hey good job you did the thing");
 			loadNextPuzzle();
+			lives=9;
 			frame.pack();
 		}
 	}
 
+	public void playDeathKnell() {
+		try {
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("/Users/League/Google Drive/league-sounds/funeral-march.wav"));
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.start();
+			Thread.sleep(8400);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 
+		if(lives==0) {
+			playDeathKnell();
+
+		}
 	}
 }
