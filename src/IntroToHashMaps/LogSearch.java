@@ -1,10 +1,15 @@
 package IntroToHashMaps;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class LogSearch {
+public class LogSearch implements ActionListener {
   /* 
 	 * Crate a HashMap of Integers for the keys and Strings for the values.
 	 * Create a GUI with three buttons. 
@@ -32,6 +37,9 @@ public class LogSearch {
 	 * 				is not in the list. 
 	 *
 	 * */
+	
+	HashMap<Integer, String> studentID;
+	
 	JFrame frame;
 	JPanel panel;
 	JButton addEntry;
@@ -39,12 +47,44 @@ public class LogSearch {
 	JButton viewList;
 	
 	void setup() {
+		studentID = new HashMap<Integer, String>();
+		
+		frame = new JFrame();
+		panel = new JPanel();
+		addEntry = new JButton();
+		search = new JButton();
+		viewList = new JButton();
+		
 		frame.setVisible(true);
 		frame.add(panel);
 		panel.add(addEntry);
 		panel.add(search);
 		panel.add(viewList);
 		addEntry.addActionListener(this);
+		search.addActionListener(this);
+		viewList.addActionListener(this);
+		
+		frame.pack();
+	}
+	
+	public static void main(String[] args) {
+		LogSearch logSearch = new LogSearch();
+		logSearch.setup();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == addEntry) {
+			JOptionPane.showInputDialog("Enter an ID number");
+			JOptionPane.showInputDialog("Enter a student's name");
+		}
+		if(e.getSource() == search) {
+			
+		}
+		if(e.getSource() == viewList) {
+			
+		}
+		
 	}
 	
 }
