@@ -61,8 +61,11 @@ public class LogSearch implements ActionListener {
 		panel.add(search);
 		panel.add(viewList);
 		addEntry.addActionListener(this);
+		addEntry.setText("Add Entry");
 		search.addActionListener(this);
+		search.setText("Search");
 		viewList.addActionListener(this);
+		viewList.setText("View List");
 		
 		frame.pack();
 	}
@@ -75,14 +78,31 @@ public class LogSearch implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == addEntry) {
-			JOptionPane.showInputDialog("Enter an ID number");
-			JOptionPane.showInputDialog("Enter a student's name");
+			int ID = 0;
+			String IDname = "";
+			String name = "";
+			IDname = JOptionPane.showInputDialog("Enter an ID number");
+			ID = Integer.parseInt(IDname);
+			name = JOptionPane.showInputDialog("Enter a student's name");
+			studentID.put(ID, name);
+			
 		}
 		if(e.getSource() == search) {
+			String nameFound = "";
+			int IDfound = 0;
+			String IDsearch = "";
+			IDsearch = JOptionPane.showInputDialog("Imput ID Number");
+			IDfound = Integer.parseInt(IDsearch);
+			nameFound = studentID.get(IDfound);
+			JOptionPane.showMessageDialog(null, nameFound);
 			
 		}
 		if(e.getSource() == viewList) {
-			
+			String list = "";
+			for(Integer i : studentID.keySet()){
+				String name = studentID.get(i);
+				list += "ID: " + i + " Name: " + name + "\n";
+			}JOptionPane.showMessageDialog(null, list);
 		}
 		
 	}
