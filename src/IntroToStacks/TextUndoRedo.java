@@ -25,17 +25,20 @@ public class TextUndoRedo implements KeyListener {
 	JPanel panel;
 	JLabel label;
 	String letter;
+	String remove;
 	String textBox;
 	Stack<String> letters = new Stack<String>();
+	Stack<String> removed = new Stack<String>();
 	void setup() {
 		frame = new JFrame();
 		panel = new JPanel();
 		label = new JLabel();
+		label.setText("");
 		frame.setVisible(true);
 		frame.add(panel);
 		panel.add(label);
 		frame.addKeyListener(this);
-		frame.pack();
+		frame.setSize(1500, 50);
 	}
 	
 	
@@ -53,12 +56,30 @@ public class TextUndoRedo implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+		if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			String deleated = letters.pop();
+			label.repaint();
+			panel.repaint();
+			frame.repaint();
+			removed.push(deleated);
+		}else if(e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
+			letters.push(removed.pop());
+			 
+		}else {
 		letter = e.getKeyChar() + "";
 		letters.push(letter);
-		for(String text: letters) {
-		textBox += letters.pop();
-		}label.setText(textBox);
-		System.out.println(letter);
+		
+		}
+		String textBox = "";
+		for(int i = 0; i<letters.size(); i++) {
+		textBox += letters.get(i);
+		}
+		label.setText(textBox);
+		label.repaint();
+		panel.repaint();
+		frame.repaint();
+	
+		
 	}
 	@Override
 	public void keyReleased(KeyEvent e) {
